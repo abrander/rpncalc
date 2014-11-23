@@ -1,0 +1,167 @@
+<html ng-app="rpncalc">
+  <head>
+    <title>RPN Calculator</title>
+    <link href='https://fonts.googleapis.com/css?family=Oxygen+Mono' rel='stylesheet' type='text/css'>
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular-animate.min.js"></script>
+    <script src="js/compiled.js"></script>
+    <style>
+      body {
+        color: #eee;
+        background-color: #3b5898;
+      }
+
+      a {
+        color: white;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: white;
+        text-decoration: underline;
+      }
+
+      button {
+        font-family: 'Oxygen Mono';
+        width: 100%;
+        font-size: 130%;
+        -moz-box-shadow:inset 0px 1px 0px 0px #7a8eb9;
+        -webkit-box-shadow:inset 0px 1px 0px 0px #7a8eb9;
+        box-shadow:inset 0px 1px 0px 0px #7a8eb9;
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #637aad), color-stop(1, #5972a7));
+        background:-moz-linear-gradient(top, #637aad 5%, #5972a7 100%);
+        background:-webkit-linear-gradient(top, #637aad 5%, #5972a7 100%);
+        background:-o-linear-gradient(top, #637aad 5%, #5972a7 100%);
+        background:-ms-linear-gradient(top, #637aad 5%, #5972a7 100%);
+        background:linear-gradient(to bottom, #637aad 5%, #5972a7 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#637aad', endColorstr='#5972a7',GradientType=0);
+        background-color:#637aad;
+        border:1px solid #314179;
+        cursor:pointer;
+        color:#ffffff;
+      }
+
+      button:disabled {
+        color: #aaa;
+      }
+
+      button:hover {
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #5972a7), color-stop(1, #637aad));
+        background:-moz-linear-gradient(top, #5972a7 5%, #637aad 100%);
+        background:-webkit-linear-gradient(top, #5972a7 5%, #637aad 100%);
+        background:-o-linear-gradient(top, #5972a7 5%, #637aad 100%);
+        background:-ms-linear-gradient(top, #5972a7 5%, #637aad 100%);
+        background:linear-gradient(to bottom, #5972a7 5%, #637aad 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#5972a7', endColorstr='#637aad',GradientType=0);
+        background-color:#5972a7;
+      }
+
+      button:active {
+        position:relative;
+        top:1px;
+      }
+
+      button:focus {
+          outline: 0;
+      }
+
+      @media screen and (max-width: 767px) {
+        table {
+          width: 100%;
+        }
+
+        h2 {
+          display: none;
+        }
+      }
+
+      td {
+      	text-align: right;
+      	font-family: 'Oxygen Mono';
+      }
+
+      span.label {
+        float: left;
+        color: #cba;
+      }
+
+      span.cursor {
+        color: #abc;
+      }
+
+      .blink {
+        animation: blink 0.5s steps(2, start) infinite;
+        -webkit-animation: blink 0.5s steps(2, start) infinite;
+      }
+      @keyframes blink {
+        to { visibility: hidden; }
+      }
+      @-webkit-keyframes blink {
+        to { visibility: hidden; }
+      }
+    </style>
+  </head>
+  <body ng-controller="Calculator as calc" ng-keypress="calc.keypress($event)">
+    <h1>RPN calculator</h1>
+    <h2>Online reverse polish notation calculator</h2>
+    <table>
+      <tr>
+        <td colspan="4"><span class="label">t</span>{{ calc.display[3] }}</td>
+      </tr>
+      <tr>
+        <td colspan="4"><span class="label">z</span>{{ calc.display[2] }}</td>
+      </tr>
+      <tr>
+        <td colspan="4"><span class="label">y</span>{{ calc.display[1] }}</td>
+      </tr>
+      <tr>
+        <td colspan="4"><span class="label">x</span>{{ calc.display[0] }}<span class="cursor blink" ng-show="calc.editing">&#9664;</span></td>
+      </tr>
+      <tr>
+        <td><button id="button_asin" ng-click="calc.doOperation('asin')" ng-disabled="calc.stack.length < 1">sin<sup><small>-1</small></sup></button></td>
+        <td><button id="button_acos" ng-click="calc.doOperation('acos')" ng-disabled="calc.stack.length < 1">cos<sup><small>-1</small></sup></button></td>
+        <td><button id="button_atan" ng-click="calc.doOperation('atan')" ng-disabled="calc.stack.length < 1">tan<sup><small>-1</small></sup></button></td>
+        <td><button id="button_" ng-click="calc.doOperation('pow')" ng-disabled="calc.stack.length < 2">y<sup><small>x</small></sup></button></td>
+      </tr>
+      <tr>
+        <td><button id="button_sin" ng-click="calc.doOperation('sin')" ng-disabled="calc.stack.length < 1">sin</button></td>
+        <td><button id="button_cos" ng-click="calc.doOperation('cos')" ng-disabled="calc.stack.length < 1">cos</button></td>
+        <td><button id="button_tan" ng-click="calc.doOperation('tan')" ng-disabled="calc.stack.length < 1">tan</button></td>
+        <td><button id="button_rec" ng-click="calc.doOperation('reciprocal')" ng-disabled="calc.stack.length < 1 || calc.stack[0] == 0">1/x</button></td>
+      </tr>
+      <tr>
+        <td colspan="2"><button id="button_enter" ng-click="calc.enter()" ng-disabled="!calc.editing">ENTER</button></td>
+        <td><button id="button_swap" ng-click="calc.doOperation('swap')" ng-disabled="calc.stack.length < 2">&#8645;</button></td>
+        <td><button id="button_del" ng-click="calc.doOperation('pop')" ng-disabled="calc.stack.length < 1">&#8592;</button></td>
+      </tr>
+      <tr>
+        <td><button id="button_7" ng-click="calc.appendNumber(7)">7</button></td>
+        <td><button id="button_8" ng-click="calc.appendNumber(8)">8</button></td>
+        <td><button id="button_9" ng-click="calc.appendNumber(9)">9</button></td>
+        <td><button id="button_div" ng-click="calc.doOperation('divide')" ng-disabled="calc.stack.length < 2 || calc.stack[0] == 0">/</button></td>
+      </tr>
+      <tr>
+        <td><button id="button_4" ng-click="calc.appendNumber(4)">4</button></td>
+        <td><button id="button_5" ng-click="calc.appendNumber(5)">5</button></td>
+        <td><button id="button_6" ng-click="calc.appendNumber(6)">6</button></td>
+        <td><button id="button_mul" ng-click="calc.doOperation('multiply')" ng-disabled="calc.stack.length < 2">*</button></td>
+      </tr>
+      <tr>
+        <td><button id="button_1" ng-click="calc.appendNumber(1)">1</button></td>
+        <td><button id="button_2" ng-click="calc.appendNumber(2)">2</button></td>
+        <td><button id="button_3" ng-click="calc.appendNumber(3)">3</button></td>
+        <td><button id="button_min" ng-click="calc.doOperation('subtract')" ng-disabled="calc.stack.length < 2">-</button></td>
+      </tr>
+      <tr>
+        <td colspan="2"><button id="button_0" ng-click="calc.appendNumber(0)">0</button></td>
+        <td><button id="button_dot" ng-click="calc.appendDecimalSeperator()" ng-disabled="calc.input.indexOf('.') > -1">.</button></td>
+        <td><button id="button_plus" ng-click="calc.doOperation('add')" ng-disabled="calc.stack.length < 2">+</button></td>
+      </tr>
+    </table>
+    <a href="/documentation/">Documentation</a> |
+    <a href="https://github.com/abrander/rpncalc/">Source Code</a>
+  </body>
+</html>
