@@ -104,7 +104,7 @@
       }
     </style>
   </head>
-  <body ng-controller="Calculator as calc" ng-keypress="calc.keypress($event)">
+  <body ng-controller="Calculator as calc" ng-keypress="calc.keypress($event)" ng-keyup="calc.keyup($event)">
     <h1>RPN calculator</h1>
     <h2>Online reverse polish notation calculator</h2>
     <table>

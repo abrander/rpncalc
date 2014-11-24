@@ -48,6 +48,16 @@ RpnCalc.Controller.Calculator = function(StackOperation) {
 	this.prepareDisplay();
 
 	/**
+	 * @param {!string} target
+	 */
+	var click = function(target) {
+		/* We wrap this in a timeout to avoid confusing Angular */
+		setTimeout(function() {
+			document.getElementById(target).click();
+		}, 1);
+	};
+
+	/**
 	 * @expose
 	 * @param {Event} event
 	 */
@@ -62,7 +72,6 @@ RpnCalc.Controller.Calculator = function(StackOperation) {
 		 * @type {Object.<!number, !string>}
 		 */
 		var table = {
-			13: 'button_enter',
 			42: 'button_mul',
 			43: 'button_plus',
 			44: 'button_dot',
@@ -78,19 +87,34 @@ RpnCalc.Controller.Calculator = function(StackOperation) {
 			54: 'button_6',
 			55: 'button_7',
 			56: 'button_8',
-			57: 'button_9',
-			127: 'button_del'
+			57: 'button_9'
 		};
 
 		var target = table[event.charCode];
 
 		if (target) {
-			/* We wrap this in a timeout to avoid confusing Angular */
-			setTimeout(function() {
-				document.getElementById(target).click();
-			}, 1);
-		} else {
-			console.info('unsupported charCode: ' + event.charCode);
+			click(target);
+		}
+	};
+
+	/**
+	 * @expose
+	 * @param {Event} event
+	 */
+	this.keyup = function(event) {
+		/**
+		 * @dict
+		 * @type {Object.<!number, !string>}
+		 */
+		var table = {
+			13: 'button_enter',
+			46: 'button_del'
+		};
+
+		var target = table[event.keyCode];
+
+		if (target) {
+			click(target);
 		}
 	};
 
