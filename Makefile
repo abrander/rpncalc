@@ -65,3 +65,11 @@ deploy: google-app-engine.yaml $(TARGETS)
 	mkdir -p app
 	cp $< app/
 	gcloud preview app --project rpncalcorg deploy app
+
+lint: jscs gjslint
+
+jscs:
+	jscs -v $(SOURCES)
+
+gjslint:
+	gjslint --disable=5,210 $(SOURCES)
