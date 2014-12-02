@@ -1,6 +1,7 @@
 TARGETS = \
 	app/js/compiled.js \
 	app/index.html \
+	app/robots.txt \
 
 EXTERNS = \
 	externs/angular-1.3-q.js \
@@ -28,6 +29,9 @@ externs/%:
 
 app/index.html: index.html
 	cp $< $@
+
+app/robots.txt: Makefile
+	> $@
 
 app/js/compiled.js: compiler.jar $(SOURCES) $(EXTERNS)
 	mkdir -p app/js
