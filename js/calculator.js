@@ -19,6 +19,12 @@ RpnCalc.Controller.Calculator = function(StackOperation) {
 
 	/**
 	 * @expose
+	 * @type {!number}
+	 */
+	this.decimals = 4;
+
+	/**
+	 * @expose
 	 * @type {RpnCalc.Stack}
 	 */
 	this.stack = [];
@@ -32,7 +38,7 @@ RpnCalc.Controller.Calculator = function(StackOperation) {
 	this.prepareDisplay = function() {
 		for (var i = 0; i < 4; i++) {
 			if (self.stack.length > i) {
-				self.display[i] = self.stack[i].toString();
+				self.display[i] = self.stack[i].toFixed(self.decimals);
 			} else {
 				self.display[i] = '·';
 			}
